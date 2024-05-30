@@ -36,7 +36,6 @@ CREATE TABLE `Post` (
     `photo` VARCHAR(191) NOT NULL,
     `date_creation` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `date_modification` DATETIME(3) NOT NULL,
-    `total_likes` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -45,6 +44,7 @@ CREATE TABLE `Post` (
 CREATE TABLE `Aime` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `utilisateur_id` INTEGER NOT NULL,
+    `aimer` BOOLEAN NOT NULL,
     `post_id` INTEGER NOT NULL,
     `date_creation` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -77,6 +77,9 @@ ALTER TABLE `Post` ADD CONSTRAINT `Post_utilisateur_id_fkey` FOREIGN KEY (`utili
 
 -- AddForeignKey
 ALTER TABLE `Aime` ADD CONSTRAINT `Aime_post_id_fkey` FOREIGN KEY (`post_id`) REFERENCES `Post`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Commentaire` ADD CONSTRAINT `Commentaire_utilisateur_id_fkey` FOREIGN KEY (`utilisateur_id`) REFERENCES `Utilisateur`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Commentaire` ADD CONSTRAINT `Commentaire_post_id_fkey` FOREIGN KEY (`post_id`) REFERENCES `Post`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
