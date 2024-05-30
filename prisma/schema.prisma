@@ -14,18 +14,19 @@ url = env("DATABASE_URL")
 }
 
 model Utilisateur {
-id Int @id @default(autoincrement())
-id_profile Int?
-firstname String
-lastname String
-email String @unique
-password String
-isAdmin Boolean
-date_creation DateTime @default(now())
-date_modification DateTime @updatedAt
-Post Post[]
-FollowerFollowing Follower[] @relation("Following")
-FollowerFollower Follower[] @relation("Follower")
+  id                Int        @id @default(autoincrement())
+  id_profile        Int?
+  firstname         String
+  lastname          String
+  email             String     @unique
+  password          String
+  isAdmin           Boolean
+  date_creation     DateTime   @default(now())
+  date_modification DateTime   @updatedAt
+  commentaires      Commentaire[]
+  Post              Post[]
+  FollowerFollowing Follower[] @relation("Following")
+  FollowerFollower  Follower[] @relation("Follower")
 }
 
 model Profile {
@@ -48,24 +49,25 @@ date_modification DateTime @updatedAt
 Utilisateur Utilisateur @relation(fields: [utilisateur_id], references: [id])
 Aime Aime[]
 Commentaire Commentaire[]
-total_likes Int
 }
 
 model Aime {
 id Int @id @default(autoincrement())
 utilisateur_id Int
+aimer Boolean
 post_id Int
 date_creation DateTime @default(now())
 Post Post @relation(fields: [post_id], references: [id])
 }
 
 model Commentaire {
-id Int @id @default(autoincrement())
-utilisateur_id Int
-post_id Int
-message String
-date_creation DateTime @default(now())
-Post Post @relation(fields: [post_id], references: [id])
+  id              Int        @id @default(autoincrement())
+  utilisateur_id  Int
+  post_id         Int
+  message         String
+  date_creation   DateTime   @default(now())
+  utilisateur     Utilisateur @relation(fields: [utilisateur_id], references: [id])
+  Post            Post       @relation(fields: [post_id], references: [id])
 }
 
 model Follower {
