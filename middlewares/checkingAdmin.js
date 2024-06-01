@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const isAdmin = async (req, res, next) => {
     try {
-        const userId = req.user.id; // Assume the user ID is set in the request (e.g., from a previous auth middleware)
+        const userId = req.user.id;
         const user = await prisma.utilisateur.findUnique({ where: { id: userId } });
 
         if (user && user.isAdmin) {
