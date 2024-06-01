@@ -9,9 +9,11 @@ dotenv.config();
 
 const prisma = new PrismaClient();
 
+
 const register = async (req, res) => {
   try {
     const { firstname, lastname, email, password } = req.body;
+
 
     if (!firstname || !lastname || !email || !password) {
       return res
@@ -20,6 +22,7 @@ const register = async (req, res) => {
           error: new BadRequestError("You forgot something, please check again").message,
         });
     }
+
 
     const userExists = await prisma.utilisateur.findUnique({
       where: {
@@ -33,7 +36,9 @@ const register = async (req, res) => {
         .json({ error: new BadRequestError("User already exists").message });
     }
 
+
     const hashedPassword = await hashPassword(password);
+
 
     const newUser = await prisma.utilisateur.create({
       data: {
@@ -47,6 +52,7 @@ const register = async (req, res) => {
 
     const token = generateToken({ user: newUser }, process.env.ACCESS_TOKEN_SECRET);
 
+
     return res.status(StatusCodes.CREATED).json({ token });
   } catch (error) {
     return res
@@ -58,6 +64,7 @@ const register = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+
 
     if (!email || !password) {
       return res.status(StatusCodes.BAD_REQUEST).json({
