@@ -25,7 +25,7 @@ export const getPosts = async (req, res) => {
         });
 
         const postsWithDetails = posts.map(post => {
-            const photoUrl = path.join('../public/uploads/posts/', post.photo).replace(/\\/g, '/');
+            const photoUrl = path.join('../uploads/posts/', post.photo).replace(/\\/g, '/');
             return {
                 ...post,
                 photoUrl,
@@ -55,7 +55,7 @@ export const getPostPhoto = async (req, res) => {
             return res.status(404).json({ error: 'Post not found' });
         }
 
-        const photoPath = join(__dirname, '..', 'public', 'uploads', 'posts', post.photo);
+        const photoPath = join(__dirname, '..', 'uploads', 'posts', post.photo);
         const photoData = fs.readFileSync(photoPath);
         console.log(photoPath)
         res.writeHead(200, { 'Content-Type': 'image/png' });
@@ -86,7 +86,6 @@ export const getPostComments = async (req, res) => {
             }
         });
 
-        // Map the comments to include only username and message
         const formattedComments = comments.map(comment => ({
             username: `${comment.utilisateur.firstname} ${comment.utilisateur.lastname}`,
             message: comment.message
