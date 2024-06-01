@@ -8,10 +8,14 @@ const app=express()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-import routerAuth from "./routes/AuthRoutes.js";
+import authRoute from "./routes/AuthRoutes.js";
+import userRoute from "./routes/UserRoutes.js";
 
-app.use("/api", routerAuth);
+app.use('/api', authRoute);
+app.use('/api', userRoute)
 
+
+//Error handling
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ error: 'Something went wrong!' });
