@@ -80,3 +80,4 @@ model Follower {
   Following     Utilisateur @relation("Following", fields: [following_id], references: [id])
   Follower      Utilisateur @relation("Follower", fields: [follower_id], references: [id])
 }
+

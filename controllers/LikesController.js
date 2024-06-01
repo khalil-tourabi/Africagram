@@ -4,40 +4,48 @@ const prisma = new PrismaClient()
 //like a post 
 
 export const likePost = async (req, res) => {
-    const userId = req.params.id
-    const aimer = true
-    const postId = req.query.postId 
+    const userId = req.user.id;
+    const { postId } = req.body;
+
+    if (!postId) {
+        return res.status(400).send("Post ID is required");
+    }
+
     try {
         const likedPost = await prisma.aime.create({
-            data : {
-                aimer,
+            data: {
                 utilisateur_id: parseInt(userId),
                 post_id: parseInt(postId)
             }
-        })
-        res.status(200).send("you liked this post")
+        });
+        res.status(200).send("You liked this post");
     } catch (error) {
-        console.log(error)
-        res.send(error)
+        console.error(error);
+        res.status(500).send("An error occurred while liking the post");
     }
-}
+};
 
 //unlike a post
 export const unlikePost = async (req, res) => {
-    const likeId = req.params.id
-    const aimer = false
-    try {
-        const unlikedPost = await prisma.aime.update({
-            where :{
-                id: parseInt(likeId)
-            },
-            data: {
-                aimer
-            }
-        }) 
-        res.send("you unlikes this post")
-    } catch (error) {
-        console.log(error)
-        res.send(error)
+    const userId = req.user.id; 
+    const { postId } = req.body;
+
+    if (!postId) {
+        return res.status(400).send("Post ID is required");
     }
-}
+
+    try {
+        const unlikedPost = await prisma.aime.delete({
+            where: {
+                utilisateur_id_post_id: {
+                    utilisateur_id: parseInt(userId),
+                    post_id: parseInt(postId)
+                }
+            }
+        });
+        res.status(200).send("You unliked this post");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("An error occurred while unliking the post");
+    }
+};
