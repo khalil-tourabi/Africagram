@@ -5,76 +5,78 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-provider = "mysql"
-url = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model Utilisateur {
-  id                Int        @id @default(autoincrement())
+  id                Int           @id @default(autoincrement())
   id_profile        Int?
   firstname         String
   lastname          String
-  email             String     @unique
+  email             String        @unique
   password          String
   isAdmin           Boolean
-  date_creation     DateTime   @default(now())
-  date_modification DateTime   @updatedAt
+  date_creation     DateTime      @default(now())
+  date_modification DateTime      @updatedAt
   commentaires      Commentaire[]
   Post              Post[]
-  FollowerFollowing Follower[] @relation("Following")
-  FollowerFollower  Follower[] @relation("Follower")
+  FollowerFollowing Follower[]    @relation("Following")
+  FollowerFollower  Follower[]    @relation("Follower")
+  profile           Profile?
 }
 
 model Profile {
-id Int @id @default(autoincrement())
-id_utilisateur Int @unique
-sexe String
-pays String
-ville String
-date_creation DateTime @default(now())
-date_modification DateTime @updatedAt
+  id                Int         @id @default(autoincrement())
+  id_utilisateur    Int         @unique
+  sexe              String
+  pays              String
+  ville             String
+  date_creation     DateTime    @default(now())
+  date_modification DateTime    @updatedAt
+  utilisateur       Utilisateur @relation(fields: [id_utilisateur], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Post {
-id Int @id @default(autoincrement())
-utilisateur_id Int
-caption String
-photo String
-date_creation DateTime @default(now())
-date_modification DateTime @updatedAt
-Utilisateur Utilisateur @relation(fields: [utilisateur_id], references: [id])
-Aime Aime[]
-Commentaire Commentaire[]
+  id                Int           @id @default(autoincrement())
+  utilisateur_id    Int
+  caption           String
+  photo             String
+  date_creation     DateTime      @default(now())
+  date_modification DateTime      @updatedAt
+  Utilisateur       Utilisateur   @relation(fields: [utilisateur_id], references: [id])
+  Aime              Aime[]
+  Commentaire       Commentaire[]
 }
 
 model Aime {
-id Int @id @default(autoincrement())
-utilisateur_id Int
-aimer Boolean
-post_id Int
-date_creation DateTime @default(now())
-Post Post @relation(fields: [post_id], references: [id])
+  id             Int      @id @default(autoincrement())
+  utilisateur_id Int
+  aimer          Boolean
+  post_id        Int
+  date_creation  DateTime @default(now())
+  Post           Post     @relation(fields: [post_id], references: [id])
 }
 
 model Commentaire {
-  id              Int        @id @default(autoincrement())
-  utilisateur_id  Int
-  post_id         Int
-  message         String
-  date_creation   DateTime   @default(now())
-  utilisateur     Utilisateur @relation(fields: [utilisateur_id], references: [id])
-  Post            Post       @relation(fields: [post_id], references: [id])
+  id             Int         @id @default(autoincrement())
+  utilisateur_id Int
+  post_id        Int
+  message        String
+  date_creation  DateTime    @default(now())
+  utilisateur    Utilisateur @relation(fields: [utilisateur_id], references: [id])
+  Post           Post        @relation(fields: [post_id], references: [id])
 }
 
 model Follower {
-id Int @id @default(autoincrement())
-following_id Int
-follower_id Int
-date_creation DateTime @default(now())
-Following Utilisateur @relation("Following", fields: [following_id], references: [id])
-Follower Utilisateur @relation("Follower", fields: [follower_id], references: [id])
+  id            Int         @id @default(autoincrement())
+  following_id  Int
+  follower_id   Int
+  date_creation DateTime    @default(now())
+  Following     Utilisateur @relation("Following", fields: [following_id], references: [id])
+  Follower      Utilisateur @relation("Follower", fields: [follower_id], references: [id])
 }

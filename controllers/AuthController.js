@@ -9,11 +9,12 @@ dotenv.config();
 
 const prisma = new PrismaClient();
 
-const register = async (req, res, next) => {
+
+const register = async (req, res) => {
   try {
     const { firstname, lastname, email, password } = req.body;
 
-    // Check if all the data are filled
+
     if (!firstname || !lastname || !email || !password) {
       return res
         .status(StatusCodes.BAD_REQUEST)
@@ -22,7 +23,7 @@ const register = async (req, res, next) => {
         });
     }
 
-    // Check if the user already exists
+
     const userExists = await prisma.utilisateur.findUnique({
       where: {
         email,
@@ -35,24 +36,23 @@ const register = async (req, res, next) => {
         .json({ error: new BadRequestError("User already exists").message });
     }
 
-    // Hash Password
+
     const hashedPassword = await hashPassword(password);
 
-    // Save the user in the database
+
     const newUser = await prisma.utilisateur.create({
       data: {
         firstname,
         lastname,
         email,
         password: hashedPassword,
-        isAdmin: isAdmin || false,
+        isAdmin: false
       },
     });
 
-    // Generate Token
     const token = generateToken({ user: newUser }, process.env.ACCESS_TOKEN_SECRET);
 
-    // Send response and token
+
     return res.status(StatusCodes.CREATED).json({ token });
   } catch (error) {
     return res
@@ -61,18 +61,17 @@ const register = async (req, res, next) => {
   }
 };
 
-const loginUser = async (req, res, next) => {
+const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Check if email & password are valid
+
     if (!email || !password) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         error: new BadRequestError("Please fill all the data").message,
       });
     }
 
-    // check if the user exists
     const user = await prisma.utilisateur.findUnique({
       where: {
         email,
@@ -85,7 +84,6 @@ const loginUser = async (req, res, next) => {
         .json({ error: new NotFoundError("User not found").message });
     }
 
-    // Compare passwords
     const correctPassword = await comparePasswords(password, user.password);
     if (!correctPassword) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
@@ -93,7 +91,6 @@ const loginUser = async (req, res, next) => {
       });
     }
 
-    // Generate Token
     const token = generateToken({ user: user }, process.env.ACCESS_TOKEN_SECRET);
     return res.status(StatusCodes.OK).json({ token });
   } catch (error) {
