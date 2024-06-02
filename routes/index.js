@@ -16,6 +16,6 @@ routes.use(statisticRouter);
 routes.use(followRouter);
 routes.use(newsfeedRouter);
 routes.use(userRoute);
-routes,use(routerProfile);
+routes.use(routerProfile);
 
 export default routes;
