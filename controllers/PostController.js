@@ -5,6 +5,7 @@ import { dirname } from 'path';
 import fs from 'fs'
 import { createPostSchema, idSchema, updatePostSchema } from '../helpers/post_validation_schema.js';
 import BadRequestError from '../errors/bad-request.js';
+import UnAuthenticatedError from '../errors/unauthenticated.js';
 
 const prisma = new PrismaClient()
 
@@ -17,6 +18,11 @@ export const getPosts = async (req, res) => {
     userId = req.user.id
 
     console.log(userId)
+
+    if (!userId){
+        throw new UnAuthenticatedError("you must login first!!")
+    }
+
     try {
         const posts = await prisma.post.findMany({
             include: {
