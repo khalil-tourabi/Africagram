@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import fs from 'fs'
 import { createPostSchema, idSchema, updatePostSchema } from '../helpers/post_validation_schema.js';
+import BadRequestError from '../errors/bad-request.js';
 
 const prisma = new PrismaClient()
 
@@ -41,8 +42,7 @@ export const getPosts = async (req, res) => {
         res.status(200).json(postsWithDetails);
         return postsWithDetails;
     } catch (error) {
-        console.error('Error fetching posts:', error);
-        res.status(500).json({ error: 'Failed to fetch posts' });
+        throw new BadRequestError('Failed to fetch posts');
     }
 };
 
@@ -66,8 +66,7 @@ export const getPostPhoto = async (req, res) => {
         res.end(photoData, 'binary');
     } catch (error) {
         console.error('Error fetching post photo:', error);
-        res.status(500).json({ error: 'Failed to fetch post photo' });
-    }
+        throw new BadRequestError('Failed to fetch post photo');    }
 }
 
 
@@ -98,8 +97,7 @@ export const getPostComments = async (req, res) => {
         res.status(200).send(formattedComments);
     } catch (error) {
         console.log(error);
-        res.status(500).send(error);
-    }
+        throw new BadRequestError('Failed to fetch comments');    }
 };
 
 
@@ -117,7 +115,7 @@ export const getPostLikes = async (req, res) => {
         res.status(200).send(postLikes)
     } catch (error) {
         console.log(error)
-        res.status(500).send(error)
+        throw new BadRequestError('Failed to fetch likes');
     }
 }
 
@@ -147,7 +145,7 @@ export const createPost = async (req, res) => {
         res.status(200).json(newPost);
     } catch (error) {
         console.error(error);
-        res.status(400).json({ error: error.message });
+        throw new BadRequestError('photo and caption are required');
     }
 };
 
@@ -170,7 +168,7 @@ export const deletePost = async (req, res) => {
         res.status(200).send(deletedPost)
     } catch (error) {
         console.log(error);
-        res.send(error)
+        throw new BadRequestError('Failed to delete post');
     }
 }
 
@@ -214,6 +212,6 @@ export const updatePost = async (req, res) => {
         res.status(200).send("post updated..")
     }catch(error){
         console.log(error)
-        res.json(error)
+        throw new BadRequestError('Failed to update post');
     }
 }
