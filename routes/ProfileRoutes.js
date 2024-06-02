@@ -1,11 +1,11 @@
 import express from "express";
-import verifyToken from "../middlewares/verifyToken.js";
 import { createProfile, getProfile } from "../controllers/ProfileController.js";
+import tokenVerification from "../middlewares/tokenVerification.js";
 
 const routerProfile = express.Router();
 
 routerProfile
-  .post("/createProfile", createProfile)
-  .get("/profile", getProfile);
+  .post("/createProfile", tokenVerification, createProfile)
+  .get("/profile", tokenVerification, getProfile);
 
 export default routerProfile;
