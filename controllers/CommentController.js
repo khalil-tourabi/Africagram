@@ -5,9 +5,8 @@ const prisma = new PrismaClient()
 
 //post comment
 export const createComment = async (req, res) => {
-    const userId = req.params.id
-    const message = req.body.message
-    const postId = req.query.postId
+    const userId = req.user.id
+    const {postId, message } = req.body 
 
     const { error } = createCommentSchema.validate({ message, postId });
     if (error) return res.status(400).json({ error: error.details[0].message });
@@ -30,16 +29,18 @@ export const createComment = async (req, res) => {
 //modify
 
 export const updateComment = async (req, res) => {
-    const id = req.params.id;
+    const commentId = req.body.commentId;
     const updatedmessage = req.body.message;
 
-    const { error } = updateCommentSchema.validate({ message });
+    console.log("\n\n\n comment id: ", commentId, " updated message: ",updatedmessage, "\n\n\n\n")
+
+    const { error } = updateCommentSchema.validate({commentId, updatedmessage });
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     try {
         const updatedComment = await prisma.commentaire.update({
             where: {
-                id: parseInt(id)
+                id: parseInt(commentId)
             },
             data: {
                 message: updatedmessage
@@ -55,14 +56,14 @@ export const updateComment = async (req, res) => {
 //delete
 
 export const deleteComment = async (req, res) => {
-    const id = req.params.id;
+    const {commentId} = req.body;
 
-    const { error } = deleteCommentSchema.validate({ id });
+    const { error } = deleteCommentSchema.validate({ commentId });
     if (error) return res.status(400).json({ error: error.details[0].message });
     try {
         const deletedComment = await prisma.commentaire.delete({
             where: {
-                id: parseInt(id)
+                id: parseInt(commentId)
             }
         })
         res.status(200).send(deletedComment)

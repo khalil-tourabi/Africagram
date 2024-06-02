@@ -12,6 +12,10 @@ const __dirname = dirname(__filename);
 
 //Get all posts 
 export const getPosts = async (req, res) => {
+    let userId    
+    userId = req.user.id
+
+    console.log(userId)
     try {
         const posts = await prisma.post.findMany({
             include: {
@@ -119,7 +123,7 @@ export const getPostLikes = async (req, res) => {
 
 // Create new post
 export const createPost = async (req, res) => {
-    const idUtilisateur  = req.params.id;
+    const userId = req.user.id;
     const { caption } = req.body;
     const  photo  = req.file.filename;
     const photosize = req.file.size;
@@ -136,7 +140,7 @@ export const createPost = async (req, res) => {
             data: {
                 caption,
                 photo,
-                utilisateur_id: parseInt(idUtilisateur) 
+                utilisateur_id: parseInt(userId) 
             }
         });
 
@@ -173,6 +177,7 @@ export const deletePost = async (req, res) => {
 //modify post
 
 export const updatePost = async (req, res) => {
+    const userId = req.user.id;
     const id = req.params.id;
     const newCaption = req.body.caption;
     const newPhoto = req.file.filename;
@@ -182,6 +187,18 @@ export const updatePost = async (req, res) => {
     if (error) return res.status(400).json({ error: error.details[0].message});
 
     try{
+
+        const existingPost = await prisma.post.findUnique({
+            where:{
+                id: parseInt(id)
+            }
+        })
+
+        if(existingPost.utilisateur_id !== userId){
+            return res.status(403).send("You don't have permetion to update this post.")
+        }
+
+
         const updatedPost = await prisma.post.update({
             where:{
                 id: parseInt(id)
@@ -190,9 +207,10 @@ export const updatePost = async (req, res) => {
                 caption: newCaption,
                 photo: newPhoto,
                 date_modification: new Date()
-
             }
-        })
+        });
+
+
         res.status(200).send("post updated..")
     }catch(error){
         console.log(error)

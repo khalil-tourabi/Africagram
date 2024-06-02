@@ -1,6 +1,8 @@
 import express from "express"
 import dotenv from "dotenv"
 import routes from "./routes/index.js";
+import authRoute from "./routes/AuthRoutes.js";
+
 dotenv.config()
 
 const app=express()
@@ -9,12 +11,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-import authRoute from "./routes/AuthRoutes.js";
-import userRoute from "./routes/UserRoutes.js";
+app.use(authRoute);
 
-app.use('/api', authRoute);
-app.use('/api', userRoute)
 
+app.use(routes)
 
 //Error handling
 app.use((err, req, res, next) => {
@@ -32,7 +32,6 @@ app.use(express.static('./uploads'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(routes)
 
 const port=process.env.APP_PORT || 8000
 app.listen(port,()=>{

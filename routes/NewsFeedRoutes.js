@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getNewsfeed } from "../controllers/NewsFeedController";
+import { getNewsfeed } from "../controllers/NewsFeedController.js";
+import tokenVerification from "../middlewares/tokenVerification.js";
 
 const newsfeedRouter = Router();
 
-newsfeedRouter.get("/newsfeed", getNewsfeed);
+newsfeedRouter.get("/newsfeed", tokenVerification, getNewsfeed);
 
 export default newsfeedRouter;

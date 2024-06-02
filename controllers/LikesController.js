@@ -28,19 +28,16 @@ export const likePost = async (req, res) => {
 //unlike a post
 export const unlikePost = async (req, res) => {
     const userId = req.user.id; 
-    const { postId } = req.body;
+    const { likeId } = req.body;
 
-    if (!postId) {
-        return res.status(400).send("Post ID is required");
+    if (!likeId) {
+        return res.status(400).send("like ID is required");
     }
 
     try {
-        const unlikedPost = await prisma.aime.delete({
+        const unlikedPost = await prisma.aime.deleteMany({
             where: {
-                utilisateur_id_post_id: {
-                    utilisateur_id: parseInt(userId),
-                    post_id: parseInt(postId)
-                }
+                    id: likeId
             }
         });
         res.status(200).send("You unliked this post");

@@ -6,10 +6,11 @@ export const createCommentSchema = Joi.object({
 });
 
 export const updateCommentSchema = Joi.object({
-    message: Joi.string().required(),
+    commentId: Joi.number().integer().required(),
+    updatedmessage: Joi.string().required(),
 });
 
 export const deleteCommentSchema = Joi.object({
-    id: Joi.number().integer().required(),
+    commentId: Joi.number().integer().required(),
 });
 

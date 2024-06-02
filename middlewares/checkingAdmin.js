@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const isAdmin = async (req, res, next) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user?.id;
         const user = await prisma.utilisateur.findUnique({ where: { id: userId } });
 
         if (user && user.isAdmin) {

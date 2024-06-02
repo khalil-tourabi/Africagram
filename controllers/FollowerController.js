@@ -1,5 +1,5 @@
-import { prismaClient } from '@prisma/client';
-const prisma = prismaClient;
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
 // Follow a user
 
@@ -29,19 +29,16 @@ export const followUser = async (req, res) => {
 
 export const unfollowUser = async (req, res) => {
     const userId = req.user.id;
-    const { followUserId } = req.body;
+    const { followId } = req.body;
 
-    if (!followUserId) {
+    if (!followId) {
         return res.status(400).send("user ID to unfollow is required");
     }
 
     try {
         const unfollow = await prisma.follower.delete({
             where: {
-                follower_id_following_id: {
-                    follower_id: parseInt(userId),
-                    following_id: parseInt(followUserId)
-                }
+                    id: parseInt(followId)
             }
         });
         res.status(200).send("You unfollowed this user");

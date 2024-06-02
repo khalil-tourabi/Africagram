@@ -4,6 +4,6 @@ import tokenVerification from "../middlewares/tokenVerification.js";
 
 const userRoute = express.Router();
 
-userRoute.put("/updateUser", tokenVerification, updateUser).get("/getUser", tokenVerification, getUser).delete("/deleteUser", tokenVerification, deleteUser);
+userRoute.put("/updateUser", tokenVerification, updateUser).get("/getUser", getUser).delete("/deleteUser", tokenVerification, deleteUser);
 
 export default userRoute;

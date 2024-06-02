@@ -56,7 +56,6 @@ model Post {
 model Aime {
   id             Int      @id @default(autoincrement())
   utilisateur_id Int
-  aimer          Boolean
   post_id        Int
   date_creation  DateTime @default(now())
   Post           Post     @relation(fields: [post_id], references: [id])
@@ -80,4 +79,3 @@ model Follower {
   Following     Utilisateur @relation("Following", fields: [following_id], references: [id])
   Follower      Utilisateur @relation("Follower", fields: [follower_id], references: [id])
 }
-

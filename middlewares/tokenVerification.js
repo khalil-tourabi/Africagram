@@ -6,6 +6,7 @@ dotenv.config();
 function tokenVerification(req, res, next) {
   try {
     const { authorization } = req.headers;
+    console.log(authorization)
     if (!authorization) {
       throw new UnAuthenticatedError("No token provided");
     }

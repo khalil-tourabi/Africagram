@@ -78,17 +78,14 @@ async function main() {
       {
         utilisateur_id: 1,
         post_id: 2,
-        aimer: true,
       },
       {
         utilisateur_id: 2,
         post_id: 3,
-        aimer: true,
       },
       {
         utilisateur_id: 3,
         post_id: 1,
-        aimer: true,
       },
     ],
   });
