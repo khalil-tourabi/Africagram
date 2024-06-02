@@ -5,7 +5,7 @@ import { createProfile, getProfile } from "../controllers/ProfileController.js";
 const routerProfile = express.Router();
 
 routerProfile
-  .post("/createProfile", verifyToken, createProfile)
-  .get("/profile", verifyToken, getProfile);
+  .post("/createProfile", createProfile)
+  .get("/profile", getProfile);
 
 export default routerProfile;
