@@ -58,7 +58,7 @@ model Aime {
   utilisateur_id Int
   post_id        Int
   date_creation  DateTime @default(now())
-  Post           Post     @relation(fields: [post_id], references: [id])
+  Post           Post     @relation(fields: [post_id], references: [id],onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Commentaire {
@@ -68,7 +68,7 @@ model Commentaire {
   message        String
   date_creation  DateTime    @default(now())
   utilisateur    Utilisateur @relation(fields: [utilisateur_id], references: [id])
-  Post           Post        @relation(fields: [post_id], references: [id])
+  Post           Post        @relation(fields: [post_id], references: [id],onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Follower {

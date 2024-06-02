@@ -115,7 +115,6 @@ export const getPostLikes = async (req, res) => {
         const postLikes  = await prisma.aime.findMany({
             where :{
                 post_id: parseInt(postId),
-                aimer: true
             }
         })
         res.status(200).send(postLikes)
@@ -163,6 +162,8 @@ export const deletePost = async (req, res) => {
 
     const id = req.params.id 
 
+    console.log("post id: ",id)
+
     const { error } = idSchema.validate(id);
     if (error) return res.status(400).json({ error: error.details[0].message });
     try {
@@ -170,7 +171,8 @@ export const deletePost = async (req, res) => {
             where: {
                 id: parseInt(id)
             }
-        })
+        });
+        
         res.status(200).send(deletedPost)
     } catch (error) {
         console.log(error);

@@ -12,6 +12,6 @@ postRouter.get("/posts/:id/comments", getPostComments)
 postRouter.get("/posts/:id/likes", getPostLikes)
 postRouter.post("/posts",tokenVerification,uploadpost.single('photo'), createPost)
 postRouter.put("/posts/:id",tokenVerification, uploadpost.single('photo'), updatePost)
-postRouter.delete("/posts/:id", deletePost)
+postRouter.delete("/posts/:id",tokenVerification, deletePost)
 
 export default postRouter
